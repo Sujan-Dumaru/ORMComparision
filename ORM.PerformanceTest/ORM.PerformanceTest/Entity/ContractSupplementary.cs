@@ -43,5 +43,11 @@ namespace ORM.PerformanceTest.Entity
         {
             Id = Guid.NewGuid();
         }
+
+        public virtual void UpdateDates(DateTime startDate, DateTime endDate)
+        {
+            StartDate = startDate;
+            EndDate = endDate;
+        }
     }
 }

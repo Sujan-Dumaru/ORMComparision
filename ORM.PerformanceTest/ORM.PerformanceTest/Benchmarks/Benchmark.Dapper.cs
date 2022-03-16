@@ -111,27 +111,37 @@ namespace ORM.PerformanceTest.Benchmarks
             }
         }
 
-        //[Benchmark(Description = "UpdateContractSupplementary")]
-        //public async Task UpdateContractSupplementary()
-        //{
-        //    using (var transaction = _connection.BeginTransaction())
-        //    {
-        //        try
-        //        {
+        [Benchmark(Description = "UpdateContractSupplementary")]
+        public void UpdateContractSupplementary()
+        {
+            var query = @"
+                    SELECT * FROM contractsupplementary;
+                ";
 
-        //            await _connection.ExecuteScalarAsync<int>(GetContractUpdateQuery(),
-        //                             ContractSupplementaries, transaction);
+            var contractSupplementaries = _connection.Query<ContractSupplementary>(query);
 
-        //            transaction.Commit();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            transaction.Rollback();
-        //            throw;
-        //        }
+            using (var transaction = _connection.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var contractSupplementary in contractSupplementaries)
+                    {
+                        contractSupplementary.UpdateDates(new DateTime(2022, 02, 01), new DateTime(2022, 02, 28));
+                        _connection.ExecuteScalarAsync<int>(GetContractUpdateQuery(),
+                                     contractSupplementary, transaction);
+                    }
+                    
 
-        //    }
-        //}
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+
+            }
+        }
 
         private string GetContractUpdateQuery()
         {

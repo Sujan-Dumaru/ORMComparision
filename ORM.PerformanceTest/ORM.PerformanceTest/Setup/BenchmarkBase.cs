@@ -22,6 +22,8 @@ namespace ORM.PerformanceTest.Setup
 
         public List<ContractSupplementary> ContractSupplementaries;
 
+        public List<ContractSupplementary> UpdateContractSupplementaries;
+
         protected void BaseSetup()
         {
             //SimpleCRUD.SetDialect(SimpleCRUD.Dialect.MySQL);
@@ -39,12 +41,12 @@ namespace ORM.PerformanceTest.Setup
             var contractGroupId = Guid.Parse("00015757-86aa-443e-b4ac-ab06009aa757");
             ContractSupplementaries = new List<ContractSupplementary>();
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var contractSupplementary = new ContractSupplementary(contractGroupId, new DateTime(2022, 01, 01), new DateTime(2022, 01, 30),
                 110001, "Energy", "Energy", 1, 1, 10, "c/kWh");
                 ContractSupplementaries.Add(contractSupplementary);
             }
-        } 
+        }
     }
 }

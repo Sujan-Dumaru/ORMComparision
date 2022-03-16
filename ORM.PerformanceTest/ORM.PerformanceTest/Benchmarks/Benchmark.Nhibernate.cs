@@ -37,6 +37,7 @@ namespace ORM.PerformanceTest.Benchmarks
                 }
 
                 transaction.Commit();
+                transaction.Dispose();
             }
             return Task.CompletedTask;
         }
@@ -59,11 +60,26 @@ namespace ORM.PerformanceTest.Benchmarks
             return query.ToListAsync();
         }
 
-        //[Benchmark(Description = "UpdateContractSupplementary")]
-        //public void UpdateContractSupplementary()
-        //{
-        //    _statelessSession.Update(ContractSupplementaries);
-        //}
+        [Benchmark(Description = "UpdateContractSupplementary")]
+        public void UpdateContractSupplementaryAsync()
+        {
+            var query = _statelessSession.Query<ContractSupplementary>();
+
+            var contractSupplementaries = query.ToList();
+
+            using (var transaction = _statelessSession.BeginTransaction())
+            {
+                foreach (var contractSupplementary in contractSupplementaries)
+                {
+                    contractSupplementary.UpdateDates(new DateTime(2022, 02, 01), new DateTime(2022, 02, 28));
+                    _statelessSession.Update(contractSupplementary);
+
+                }
+
+                transaction.Commit();
+            }
+
+        }
 
         [Benchmark(Description = "DeleteByContractGroupId")]
         public Task<int> DeleteByContractGroupId()
@@ -76,6 +92,7 @@ namespace ORM.PerformanceTest.Benchmarks
 
                     var result = _statelessSession.Query<ContractSupplementary>().Where(c => c.ContractGroupId == contractGroupId).DeleteAsync(CancellationToken.None);
                     transaction.Commit();
+                    transaction.Dispose();
 
                     return result;
 
@@ -84,8 +101,8 @@ namespace ORM.PerformanceTest.Benchmarks
                 {
                     transaction.Rollback();
                     throw;
-                }                
-            }               
+                }
+            }
         }
     }
 }
