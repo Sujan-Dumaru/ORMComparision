@@ -12,6 +12,7 @@ BenchmarkDotNet allows you to turn your methods into benchmarks, track their per
   1. MySQL 5.7
   2. HeidiSQL - HeidiSQL is a free and open-source administration tool for MySQL and its forks, as well as Microsoft SQL Server, PostgreSQL and SQLite.
   3. .Net Core 3.1
+  4. Visual Studio
 
 ## Following steps should be followed to run the project.
 
